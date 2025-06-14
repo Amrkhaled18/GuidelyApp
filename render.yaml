@@ -1,6 +1,7 @@
 services:
   - type: web
     name: GuidelyApp
+    runtime: docker
     repo: https://github.com/Amrkhaled18/GuidelyApp
     plan: free
     buildCommand: |
@@ -14,4 +15,4 @@ services:
       - key: ASPNETCORE_ENVIRONMENT
         value: Production
       - key: OpenAI__ApiKey
-        value: YOUR_OPENAI_KEY_HERE
+        value: ""

@@ -1,7 +1,7 @@
 services:
   - type: web
     name: GuidelyApp
-    runtime: docker
+    runtime: node
     repo: https://github.com/Amrkhaled18/GuidelyApp
     plan: free
     buildCommand: |

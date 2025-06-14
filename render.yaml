@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: GuidelyApp
+    repo: https://github.com/Amrkhaled18/GuidelyApp
+    plan: free
+    buildCommand: |
+      cd ClientApp
+      npm install
+      npm run build
+      cd ..
+      dotnet publish -c Release -o out
+    startCommand: dotnet out/FinalProjectTest.dll
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: OpenAI__ApiKey
+        value: YOUR_OPENAI_KEY_HERE

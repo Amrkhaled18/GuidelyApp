@@ -2,14 +2,13 @@ services:
   - type: web
     name: GuidelyApp
     runtime: node
-    repo: https://github.com/Amrkhaled18/GuidelyApp
     plan: free
     buildCommand: |
       cd ClientApp
       npm install
       npm run build
       cd ..
-      dotnet publish -c Release -o out
+      dotnet publish FinalProjectTest.csproj -c Release -o out
     startCommand: dotnet out/FinalProjectTest.dll
     envVars:
       - key: ASPNETCORE_ENVIRONMENT

@@ -1,19 +1,28 @@
+﻿# Use .NET SDK base image
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /app
 
-# Copy everything
+# 👇 Install Node.js (16.x LTS)
+RUN apt-get update && \
+    apt-get install -y curl && \
+    curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
+    apt-get install -y nodejs && \
+    node -v && npm -v
+
+# Copy all project files
 COPY . .
 
-# Frontend
+# 🔧 Build React frontend
 WORKDIR /app/ClientApp
 RUN npm install
 RUN npm run build
 
-# Backend
+# 🔧 Build .NET backend
 WORKDIR /app
 RUN dotnet publish FinalProjectTest.csproj -c Release -o /out
 
-FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
+# ---- Runtime image ----
+FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /app
 COPY --from=build /out .
 

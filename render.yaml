@@ -1,7 +1,7 @@
 services:
   - type: web
     name: GuidelyApp
-    runtime: dotnet
+    runtime: docker
     plan: free
     buildCommand: |
       cd ClientApp

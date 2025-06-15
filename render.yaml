@@ -1,6 +1,25 @@
 services:
   - type: web
     name: GuidelyApp
-    runtime: docker
-    dockerfilePath: ./FinalProjectTest/Dockerfile
-    dockerContext: ./FinalProjectTest
+    runtime: node
+    buildCommand: |
+      # Install .NET 8
+      curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel 8.0
+      export PATH="$PATH:$HOME/.dotnet"
+      
+      # Build React
+      cd FinalProjectTest/ClientApp
+      npm install
+      npm run build
+      
+      # Build .NET
+      cd ..
+      ~/.dotnet/dotnet restore
+      ~/.dotnet/dotnet publish -c Release -o ../publish
+    startCommand: cd publish && ~/.dotnet/dotnet FinalProjectTest.dll
+    plan: free
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: "http://+:10000"

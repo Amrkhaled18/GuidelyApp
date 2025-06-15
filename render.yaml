@@ -1,40 +1,32 @@
-services:
+﻿services:
   - type: web
     name: GuidelyApp
     runtime: node
     repo: https://github.com/Amrkhaled18/GuidelyApp
-    rootDir: FinalProjectTest
     buildCommand: |
+      # Install .NET 8 SDK
       curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel 8.0
-      export PATH="$PATH:$HOME/.dotnet"
+      export PATH="$PATH:$HOME/.dotnet:$PATH"
 
-      echo "=== Repository Root Contents ==="
-      ls -la
-      echo "=== Looking for .csproj files ==="
-      find . -name "*.csproj" -type f
-      echo "=== Directory structure ==="
-      find . -type d -name "*Project*"
+      echo "=== Start Build in $(pwd) ==="
+      cd FinalProjectTest
 
-      CSPROJ_FILE=$(find . -name "*.csproj" -type f | head -1)
-      echo "Found project file: $CSPROJ_FILE"
+      if [ -f "FinalProjectTest.csproj" ]; then
+        echo "✅ Found FinalProjectTest.csproj"
 
-      if [ -n "$CSPROJ_FILE" ]; then
-        PROJECT_DIR=$(dirname "$CSPROJ_FILE")
-        echo "Project directory: $PROJECT_DIR"
-
-        if [ -d "$PROJECT_DIR/ClientApp" ]; then
-          echo "Building React frontend..."
-          cd "$PROJECT_DIR/ClientApp"
+        if [ -d "ClientApp" ]; then
+          echo "⚙️ Building React frontend"
+          cd ClientApp
           npm install
           npm run build
-          cd ../..
+          cd ..
         fi
 
-        echo "Building .NET project..."
-        ~/.dotnet/dotnet restore "$CSPROJ_FILE"
-        ~/.dotnet/dotnet publish "$CSPROJ_FILE" -c Release -o ./publish
+        echo "🚀 Publishing .NET project"
+        ~/.dotnet/dotnet restore FinalProjectTest.csproj
+        ~/.dotnet/dotnet publish FinalProjectTest.csproj -c Release -o ../publish
       else
-        echo "No .csproj file found!"
+        echo "❌ .csproj not found!"
         exit 1
       fi
     startCommand: cd publish && ~/.dotnet/dotnet FinalProjectTest.dll
@@ -43,6 +35,6 @@ services:
       - key: ASPNETCORE_ENVIRONMENT
         value: Production
       - key: ASPNETCORE_URLS
-        value: "http://+:10000"
+        value: http://+:10000
       - key: OpenAI__ApiKey
         value: "your-real-openai-key"

@@ -1,12 +1,13 @@
 services:
   - type: web
-    name: GuidelyApp
+    name: guidelyapp
     runtime: docker
-    repo: https://github.com/Amrkhaled18/GuidelyApp
-    dockerfilePath: FinalProjectTest/Dockerfile  # <- path to Dockerfile
+    dockerfilePath: ./FinalProjectTest/Dockerfile
+    dockerContext: ./FinalProjectTest
     plan: free
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
         value: Production
-      - key: OpenAI__ApiKey
-        value: "your-real-openai-key"
+      - key: ASPNETCORE_URLS
+        value: "http://+:10000"
+    healthCheckPath: /

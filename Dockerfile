@@ -6,19 +6,19 @@ RUN apt-get update && \
     curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
     apt-get install -y nodejs
 
-# Copy project file from FinalProjectTest subfolder
-COPY FinalProjectTest/*.csproj ./
-RUN dotnet restore
+# Copy the specific project file (not wildcard)
+COPY FinalProjectTest/FinalProjectTest.csproj ./FinalProjectTest/
+RUN dotnet restore FinalProjectTest/FinalProjectTest.csproj
 
 # Copy all source code
-COPY FinalProjectTest/ .
+COPY FinalProjectTest/ ./FinalProjectTest/
 
 # Build React frontend
-WORKDIR /src/ClientApp
+WORKDIR /src/FinalProjectTest/ClientApp
 RUN npm install && npm run build
 
 # Build .NET backend
-WORKDIR /src
+WORKDIR /src/FinalProjectTest
 RUN dotnet publish -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0

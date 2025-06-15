@@ -7,15 +7,40 @@ services:
       curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel 8.0
       export PATH="$PATH:$HOME/.dotnet"
       
-      # Build React frontend
-      cd FinalProjectTest/ClientApp
-      npm install
-      npm run build
-      cd ../..
+      # DEBUG: Show what files exist
+      echo "=== Repository Root Contents ==="
+      ls -la
+      echo "=== Looking for .csproj files ==="
+      find . -name "*.csproj" -type f
+      echo "=== Directory structure ==="
+      find . -type d -name "*Project*"
       
-      # Build .NET backend (specify the project file explicitly)
-      ~/.dotnet/dotnet restore FinalProjectTest/FinalProjectTest.csproj
-      ~/.dotnet/dotnet publish FinalProjectTest/FinalProjectTest.csproj -c Release -o ./publish
+      # Try to find and build the project
+      CSPROJ_FILE=$(find . -name "*.csproj" -type f | head -1)
+      echo "Found project file: $CSPROJ_FILE"
+      
+      if [ -n "$CSPROJ_FILE" ]; then
+        # Get the directory containing the .csproj
+        PROJECT_DIR=$(dirname "$CSPROJ_FILE")
+        echo "Project directory: $PROJECT_DIR"
+        
+        # Build React if ClientApp exists
+        if [ -d "$PROJECT_DIR/ClientApp" ]; then
+          echo "Building React frontend..."
+          cd "$PROJECT_DIR/ClientApp"
+          npm install
+          npm run build
+          cd ../..
+        fi
+        
+        # Build .NET
+        echo "Building .NET project..."
+        ~/.dotnet/dotnet restore "$CSPROJ_FILE"
+        ~/.dotnet/dotnet publish "$CSPROJ_FILE" -c Release -o ./publish
+      else
+        echo "No .csproj file found!"
+        exit 1
+      fi
     startCommand: cd publish && ~/.dotnet/dotnet FinalProjectTest.dll
     plan: free
     envVars:

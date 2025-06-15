@@ -3,6 +3,7 @@
     name: GuidelyApp
     runtime: node
     repo: https://github.com/Amrkhaled18/GuidelyApp
+    plan: free
     buildCommand: |
       # Install .NET 8 SDK
       curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel 8.0
@@ -11,9 +12,15 @@
       echo "=== Start Build in $(pwd) ==="
       cd FinalProjectTest
 
+      # 🧪 Debug: List contents of current directory
+      echo "🔍 Listing current directory:"
+      pwd
+      ls -la
+
       if [ -f "FinalProjectTest.csproj" ]; then
         echo "✅ Found FinalProjectTest.csproj"
 
+        # React frontend build if ClientApp exists
         if [ -d "ClientApp" ]; then
           echo "⚙️ Building React frontend"
           cd ClientApp
@@ -30,11 +37,10 @@
         exit 1
       fi
     startCommand: cd publish && ~/.dotnet/dotnet FinalProjectTest.dll
-    plan: free
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
         value: Production
       - key: ASPNETCORE_URLS
-        value: http://+:10000
+        value: "http://+:10000"
       - key: OpenAI__ApiKey
         value: "your-real-openai-key"

@@ -4,7 +4,3 @@ services:
     runtime: docker
     dockerfilePath: ./FinalProjectTest/Dockerfile
     dockerContext: ./FinalProjectTest
-    plan: free
-    envVars:
-      - key: ASPNETCORE_ENVIRONMENT
-        value: Production

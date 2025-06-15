@@ -7,15 +7,15 @@ services:
       curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel 8.0
       export PATH="$PATH:$HOME/.dotnet"
       
-      # Build React
+      # Build React frontend
       cd FinalProjectTest/ClientApp
       npm install
       npm run build
+      cd ../..
       
-      # Build .NET
-      cd ..
-      ~/.dotnet/dotnet restore
-      ~/.dotnet/dotnet publish -c Release -o ../publish
+      # Build .NET backend (specify the project file explicitly)
+      ~/.dotnet/dotnet restore FinalProjectTest/FinalProjectTest.csproj
+      ~/.dotnet/dotnet publish FinalProjectTest/FinalProjectTest.csproj -c Release -o ./publish
     startCommand: cd publish && ~/.dotnet/dotnet FinalProjectTest.dll
     plan: free
     envVars:

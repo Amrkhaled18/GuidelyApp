@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: guidelyapp
+    name: GuidelyApp
     runtime: docker
     dockerfilePath: ./FinalProjectTest/Dockerfile
     dockerContext: ./FinalProjectTest
